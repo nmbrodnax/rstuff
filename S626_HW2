@@ -1,0 +1,139 @@
+setwd('/Users/nbrodnax/Indiana/2014 Fall/S626 Bayesian Methods/Homework 2/')
+
+ya=c(12,9,12,14,13,13,15,8,15,6)
+sum(ya)
+yb=c(11,11,10,9,9,8,7,10,6,8,8,9,7)
+sum(yb)
+plot(ya)
+plot(yb)
+
+#Book example on page 49
+a<-2;b<-1 #prior parameters
+n1<-111;sy1<-217 #data in group 1
+n2<-44;sy2<-66 #data in group 2
+
+(a+sy1)/(b+n1) #posterior mean
+(a+sy1-1)/(b+n1) #posterior mode
+
+qgamma(c(0.025,0.975),a+sy1,b+n1)
+
+#HW2
+
+#3.3
+A_a<-120;A_b<-10 #prior parameters for theta_a
+B_a<-12; B_b<-1 #prior parameters for theta_a
+na<-10;sya<-117 #data in group a
+nb<-13;syb<-113 #data in group b
+
+# part a.ii
+(A_a+sya)/(A_b+na) #posterior mean for theta_a
+(B_a+syb)/(B_b+nb) #posterior mean for theta_b
+
+(A_a+sya)/((A_b+na)^2) #posterior var for theta_a
+(B_a+syb)/((B_b+nb)^2) #posterior var for theta_b
+
+# part a.iii
+qgamma(c(0.025,0.975),A_a+sya,A_b+na) #credible interval for theta_a
+qgamma(c(0.025,0.975),B_a+syb,B_b+nb) #credible interval for theta_b
+
+# part b
+alpha  = NULL #creates an empty vector
+beta = NULL
+for (i in 1:50){ #generates numbers and puts them in the empty vectors
+  alpha[i]<-12*i
+  beta[i]<-i
+}
+etheta=alpha/beta
+plot(etheta, ylab = expression(paste("E[", theta[B], "]")))
+dev.copy2pdf(file = 'etheta.pdf')
+
+#3.4
+
+# part a
+
+#plot p(theta), the prior
+theta <- seq(from=0, to=1, by=0.001)
+quartz()
+plot(theta, dbeta(theta,2,8), ylab="p(theta)")
+dev.copy2pdf(file = 'prior1.pdf')
+
+#plot p(y|theta), the likelihood
+plot(theta, dbeta(theta,15,28), ylab="p(y|theta)")
+dev.copy2pdf(file = 'likelihood1.pdf')
+
+#plot p(theta|y), the posterior
+plot(theta, dbeta(theta,17,36), ylab="p(theta|y)")
+dev.copy2pdf(file = 'posterior1.pdf')
+
+#find credible interval for posterior expectation
+qbeta(c(0.025,0.975),17,36) 
+
+#part b
+
+#plot p(theta), the prior
+theta <- seq(from=0, to=1, by=0.001)
+plot(theta, dbeta(theta,8,2), ylab="p(theta)")
+dev.copy2pdf(file = 'prior2.pdf')
+
+#plot p(y|theta), the likelihood
+plot(theta, dbeta(theta,15,28), ylab="p(y|theta)")
+dev.copy2pdf(file = 'likelihood2.pdf')
+
+#plot p(theta|y), the posterior
+plot(theta, dbeta(theta,23,30), ylab="p(theta|y)")
+dev.copy2pdf(file = 'posterior2.pdf')
+
+#find credible interval for posterior expectation
+qbeta(c(0.025,0.975),23,30) 
+
+#part c
+betamix = (3*theta)*(1-theta)^7 + (theta^7)*(1-theta)
+plot(theta,betamix, ylab="p(theta)")
+dev.copy2pdf(file = 'mixture.pdf')
+
+#part d
+mixposterior = 3*(theta^16)+(theta^22)-4*(theta^51)
+plot(theta,mixposterior, ylab="p(theta|y)")
+dev.copy2pdf(file = 'mixposterior.pdf')
+
+#3.7
+
+#part a
+#plot p(theta|y), the posterior
+plot(theta, dbeta(theta,3,14), ylab="p(theta|y)")
+dev.copy2pdf(file = 'posterior3.pdf')
+
+#part b
+quartz()
+y2 = seq(from=1, to=278, by=1)
+ethetay2 = (1+y2)/(2+y2)
+plot(y2,ethetay2, ylab="Pr(Y2=y2|Y1=2)")
+dev.copy2pdf(file = 'ethetay2.pdf')
+
+#4.2
+
+#part a
+repl <- 1000
+thetaA <- rgamma(237,20)
+thetaB <- rgamma(125,14)
+mean(thetaB<thetaA)
+
+#part b
+b <- seq(from=0, to=50, by=1)
+repl <- 1000
+thetaA <- rgamma(237,20)
+thetaB <- rgamma(125,13+b)
+mean(thetaB<thetaA)
+
+#part c
+repl <- 1000
+thetaA <- rnbinom(237,20)
+thetaB <- rnbinom(125,14)
+mean(thetaB<thetaA)
+
+b <- seq(from=0, to=50, by=1)
+repl <- 1000
+thetaA <- rnbinom(237,20)
+thetaB <- rnbinom(125,13+b)
+mean(thetaB<thetaA)
+
